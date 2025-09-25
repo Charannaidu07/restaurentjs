@@ -1,17 +1,29 @@
+// routes/orderRoute.js
 import express from 'express';
-import authMiddleware from '../middleware/auth.js';
-import { listOrders, updateStatus, userOrders, verifyOrder, placeOrderCod, createRazorpayOrder, verifyRazorpayPayment } from '../controllers/orderController.js';
+import { 
+    userOrders, 
+    listOrders, 
+    placeOrderCod, 
+    verifyOrder, 
+    createRazorpayOrder, 
+    verifyRazorpayPayment,
+    updateStatus,
+    getRestaurantOrders
+} from '../controllers/orderController.js';
+import authMiddleware from '../middleware/authMiddleware.js'; // Now this will work
 
-const orderRouter = express.Router();
+const router = express.Router();
 
-orderRouter.get("/list", listOrders);
-orderRouter.post("/userorders", authMiddleware, userOrders);
-orderRouter.post("/status", updateStatus);
-orderRouter.post("/verify", verifyOrder);
-orderRouter.post("/placecod", authMiddleware, placeOrderCod);
+// Apply auth middleware to protected routes
+router.post('/userorders', authMiddleware, userOrders);
+router.post('/placecod', authMiddleware, placeOrderCod);
+router.post('/razorpay-create-order', authMiddleware, createRazorpayOrder);
+router.post('/razorpay-verify-payment', authMiddleware, verifyRazorpayPayment);
+router.post('/verify', authMiddleware, verifyOrder);
+router.post('/status', authMiddleware, updateStatus);
 
-// Razorpay endpoints
-orderRouter.post("/razorpay-create-order", authMiddleware, createRazorpayOrder);
-orderRouter.post("/razorpay-verify-payment", authMiddleware, verifyRazorpayPayment);
+// Admin routes
+router.get('/list', listOrders);
+router.get('/restaurant-orders', getRestaurantOrders);
 
-export default orderRouter;
+export default router;

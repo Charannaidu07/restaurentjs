@@ -17,13 +17,21 @@ const App = () => {
 
   return (
     <>
-      <ToastContainer />
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {showLogin ? <LoginPopup setShowLogin={setShowLogin} /> : <></>}
       <div className='app'>
-        {/* Pass the search query state and setter to Navbar */}
         <Navbar setShowLogin={setShowLogin} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <Routes>
-          {/* Pass the search query state and setter to Home */}
           <Route path='/' element={<Home searchQuery={searchQuery} />} />
           <Route path='/cart' element={<Cart />} />
           <Route path='/order' element={<PlaceOrder />} />

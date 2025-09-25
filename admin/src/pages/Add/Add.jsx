@@ -15,9 +15,25 @@ const Add = () => {
         restaurantId: ""
     });
 
+    const getAuthToken = () => {
+        return localStorage.getItem('token');
+    };
+
     const fetchRestaurants = async () => {
         try {
-            const response = await axios.get(`${url}/api/restaurant/list`);
+            const token = getAuthToken();
+            if (!token) {
+                toast.error("Please login first");
+                window.location.href = '/login';
+                return;
+            }
+
+            const response = await axios.get(`${url}/api/restaurant/list`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
             if (response.data.success) {
                 setRestaurants(response.data.data);
                 // Set the default restaurantId to the first restaurant in the list
@@ -29,7 +45,13 @@ const Add = () => {
             }
         } catch (error) {
             console.error("Error fetching restaurants:", error);
-            toast.error("Error fetching restaurants");
+            if (error.response?.status === 401) {
+                toast.error("Session expired. Please login again.");
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            } else {
+                toast.error("Error fetching restaurants");
+            }
         }
     };
 
@@ -38,6 +60,13 @@ const Add = () => {
 
         if (!image) {
             toast.error('Image not selected');
+            return;
+        }
+
+        const token = getAuthToken();
+        if (!token) {
+            toast.error("Please login first");
+            window.location.href = '/login';
             return;
         }
 
@@ -50,7 +79,13 @@ const Add = () => {
         formData.append("restaurantId", data.restaurantId);
 
         try {
-            const response = await axios.post(`${url}/api/food/add`, formData);
+            const response = await axios.post(`${url}/api/food/add`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            
             if (response.data.success) {
                 toast.success(response.data.message);
                 setData({
@@ -66,7 +101,13 @@ const Add = () => {
             }
         } catch (error) {
             console.error("Error adding food:", error);
-            toast.error("Error adding food item");
+            if (error.response?.status === 401) {
+                toast.error("Session expired. Please login again.");
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            } else {
+                toast.error("Error adding food item");
+            }
         }
     };
 
@@ -114,20 +155,24 @@ const Add = () => {
                     </div>
                     <div className='add-price flex-col'>
                         <p>Product Price</p>
-                        <input type="Number" name='price' onChange={onChangeHandler} value={data.price} placeholder='25' />
+                        <input type="Number" name='price' onChange={onChangeHandler} value={data.price} placeholder='25' required />
                     </div>
                 </div>
                 <div className='add-restaurant flex-col'>
                     <p>Select Restaurant</p>
                     <select name='restaurantId' onChange={onChangeHandler} value={data.restaurantId} required>
-                        {restaurants.map(restaurant => (
-                            <option key={restaurant._id} value={restaurant._id}>
-                                {restaurant.name}
-                            </option>
-                        ))}
+                        {restaurants.length > 0 ? (
+                            restaurants.map(restaurant => (
+                                <option key={restaurant._id} value={restaurant._id}>
+                                    {restaurant.name}
+                                </option>
+                            ))
+                        ) : (
+                            <option value="">No restaurants available</option>
+                        )}
                     </select>
                 </div>
-                <button type='submit' className='add-btn' >ADD</button>
+                <button type='submit' className='add-btn'>ADD</button>
             </form>
         </div>
     );

@@ -1,8 +1,13 @@
-import express from 'express';
-import { loginUser,registerUser } from '../controllers/userController.js';
-const userRouter = express.Router();
+// userRoute.js
+import express from "express";
+import { loginUser, registerUser, createRestaurantAdmin, getCurrentUser } from "../controllers/userController.js";
+import { authenticateToken, requireAdmin } from "../middleware/authMiddleware.js";
 
-userRouter.post("/register",registerUser);
-userRouter.post("/login",loginUser);
+const router = express.Router();
 
-export default userRouter;
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+router.post("/create-restaurant-admin", authenticateToken, requireAdmin, createRestaurantAdmin);
+router.get("/me", authenticateToken, getCurrentUser);
+
+export default router;

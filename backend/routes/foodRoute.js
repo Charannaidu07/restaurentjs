@@ -1,21 +1,27 @@
-import express from 'express';
-import { addFood, listFood, removeFood } from '../controllers/foodController.js';
-import multer from 'multer';
+// routes/foodRoute.js
+import express from "express";
+import { addFood, listFood, removeFood, listMenu } from "../controllers/foodController.js";
+import { authenticateToken, requireRestaurantAdmin } from "../middleware/authMiddleware.js";
+import multer from "multer";
+
 const foodRouter = express.Router();
 
-//Image Storage Engine (Saving Image to uploads folder & rename it)
-
+// Image Storage Engine
 const storage = multer.diskStorage({
-    destination: 'uploads',
-    filename: (req, file, cb) => {
-        return cb(null,`${Date.now()}${file.originalname}`);
-    }
-})
+  destination: "uploads",
+  filename: (req, file, cb) => {
+    return cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
 
-const upload = multer({ storage: storage})
+const upload = multer({ storage: storage });
 
-foodRouter.get("/list",listFood);
-foodRouter.post("/add",upload.single('image'),addFood);
-foodRouter.post("/remove",removeFood);
+// Protected routes (require authentication)
+foodRouter.post("/add", authenticateToken, requireRestaurantAdmin, upload.single("image"), addFood);
+foodRouter.post("/remove", authenticateToken, requireRestaurantAdmin, removeFood);
+
+// Public routes (no authentication required) - REMOVE authenticateToken
+foodRouter.get("/list", listFood); // Remove authenticateToken from here
+foodRouter.get("/menulist", listMenu);
 
 export default foodRouter;

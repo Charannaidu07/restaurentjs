@@ -2,18 +2,24 @@ import React, { useState } from 'react'
 import Header from '../../components/Header/Header'
 import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
-import AppDownload from '../../components/AppDownload/AppDownload'
 
 const Home = ({ searchQuery }) => {
     const [category, setCategory] = useState("All");
-    const [restaurants, setRestaurants] = useState([]);
+    // State to manage the selected restaurant for filtering
+    const [restaurantFilter, setRestaurantFilter] = useState("All");
 
     return (
         <>
             <Header />
-            <ExploreMenu setCategory={setCategory} category={category} restaurants={restaurants} setRestaurants={setRestaurants} />
-            <FoodDisplay category={category} searchQuery={searchQuery} restaurants={restaurants} />
-            <AppDownload />
+            {/* Pass setCategory to ExploreMenu to handle category selection */}
+            <ExploreMenu setCategory={setCategory} category={category} />
+            {/* Pass restaurantFilter and setRestaurantFilter to FoodDisplay */}
+            <FoodDisplay 
+                category={category} 
+                restaurantFilter={restaurantFilter} 
+                setRestaurantFilter={setRestaurantFilter}
+                searchQuery={searchQuery} 
+            />
         </>
     )
 }

@@ -1,4 +1,4 @@
-// authMiddleware.js
+// middleware/authMiddleware.js
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
@@ -42,3 +42,6 @@ export const requireRestaurantAdmin = async (req, res, next) => {
         res.status(500).json({ success: false, message: "Server error" });
     }
 };
+
+// Also export as default for compatibility with orderRoute.js
+export default authenticateToken;

@@ -1,55 +1,93 @@
-.header{
-    height: 34vw;
+.header {
+    height: 400px;
     margin: 30px auto;
-    background: url('/header_img.png') no-repeat;
-    background-size:contain;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/header_img.png') no-repeat center center;
+    background-size: cover;
     position: relative;
+    border-radius: 16px;
+    overflow: hidden;
 }
-.header-contents{
+
+.header-contents {
     position: absolute;
     display: flex;
     flex-direction: column;
-    align-items: start;
-    gap: 1.5vw;
+    align-items: flex-start;
+    gap: 20px;
     max-width: 50%;
-    bottom: 10%;
-    left: 6vw;
-    animation: fadeIn 3s;
+    bottom: 15%;
+    left: 6%;
+    animation: fadeIn 1.5s;
 }
-.header-contents h2{
-    font-weight:500;
+
+.header-contents h2 {
+    font-weight: 700;
     color: white;
-    font-size: max(4.5vw,22px);
+    font-size: 48px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0;
 }
-.header-contents p{
+
+.header-contents p {
     color: white;
-    font-size: 1vw;
+    font-size: 18px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    line-height: 1.5;
 }
-.header-contents button{
+
+.header-contents button {
     border: none;
-    color: #747474;
-    font-weight: 500;
-    padding: 1vw 2.3vw;
+    color: #fc8019;
+    font-weight: 600;
+    padding: 15px 30px;
     background: white;
-    font-size: max(1vw,13px);
-    border-radius: 50px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-@media (max-width:1050px) {
-    .header{
-        height: 38vw;
+
+.header-contents button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 1050px) {
+    .header {
+        height: 350px;
     }
-    .header-contents{
-        max-width: 45%;
+    
+    .header-contents {
+        max-width: 60%;
+    }
+    
+    .header-contents h2 {
+        font-size: 36px;
     }
 }
-@media(max-width:750px){
-    .header-contents{
-        max-width: 55%;
+
+@media (max-width: 750px) {
+    .header {
+        height: 300px;
+        margin: 20px auto;
     }
-    .header-contents p{
-       display: none;
+    
+    .header-contents {
+        max-width: 80%;
+        bottom: 10%;
     }
-    .header-contents button{
-        padding: 2vw 4vw;
+    
+    .header-contents h2 {
+        font-size: 28px;
+    }
+    
+    .header-contents p {
+        font-size: 14px;
+    }
+    
+    .header-contents button {
+        padding: 12px 24px;
+        font-size: 14px;
     }
 }
